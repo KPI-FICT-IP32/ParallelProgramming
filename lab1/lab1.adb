@@ -15,16 +15,16 @@ use  Ada.Text_IO, Ada.Integer_Text_IO, Ada.Synchronous_Task_Control;
 
 procedure Lab1 is
  	
-	N: integer :=100;
+	N: integer :=500;
 	type Vector is array (1..N) of integer; 
 
 	type Matrix is array (1..N) of Vector; 
 	a : integer;
-	alpha : integer := 1; 
+	alpha, alpha1, alpha2 : integer := 1; 
 
-	MO1, MO2, ME : Matrix; 
+	MO1, MO2, MO, ME : Matrix; 
 	Z, R : Vector;
-	S1, S2, S3, S4, S_end_1: Suspension_Object;
+	S_input_finished_1, S_input_finished_2, S_copy_semaphore, S_T1_finished, S_T2_finished,S_T1_max_found,S_T2_max_found: Suspension_Object;
 	
 	function GenerateMatrix return Matrix is
 		MT: Matrix;
@@ -36,6 +36,17 @@ procedure Lab1 is
 		end loop;
 		return MT;
 	end GenerateMatrix;
+	
+	procedure DisplayMatrix(MMM: Matrix) is
+	begin		
+		for i in 1..N loop
+			for j in 1..N loop
+				Put(MMM(i)(j));
+			end loop;
+			New_Line;
+		end loop;
+		
+	end DisplayMatrix;
 
 	function GenerateVector return Vector is
 		V: Vector;
@@ -47,124 +58,113 @@ procedure Lab1 is
 	end GenerateVector;
 	
 	procedure Start is
-		a_R, a_R1, a_R2: Vector;
+		R, R1, R2: Vector;
 		ME_MO: Matrix;	
 		a_R_ME_MO, z: Vector;	
-		H: integer :=N/2;
+		H: integer := N/2;
 		max_1, max_2: integer;
+		a: integer;
 		task T1;
 		
 		-- task 1 body
-		task body T1 is begin
+		task body T1 is
+			answ: integer;
+		begin
 			Put("T1 started");
 			New_Line;			
 			-- Data input
 			ME := GenerateMatrix;
 			Z  := GenerateVector;
-			MO1 := GenerateMatrix;
-			Suspend_Until_True(S1);
+			MO := GenerateMatrix;
 						
-			-- alpha*Rh(MEh*MOh)
-			for i in 1..H loop
-				a_R(i):=alpha*R(i);
-			end loop;
-			-- MEh*MOh
+			Set_True(S_input_finished_1);
+			Suspend_Until_True(S_input_finished_2);
+			
+			MO1 := MO;
+			alpha1 := alpha;
+			R1:=R;
+			Set_True(S_copy_semaphore);
 			for i in 1..N loop
 				for j in 1..H loop
-					ME_MO(i)(j):= 0;
+					ME_MO(i)(j):=0;					
 					for k in 1..N loop
-						ME_MO(i)(j):=ME_MO(i)(j)+ME(i)(k)*MO2(k)(j);
+						ME_MO(i)(j):=ME_MO(i)(j)+ME(k)(i)*MO1(i)(k);
 					end loop;
 				end loop;
 			end loop;
-			-- a_R*ME_MO
-			a_R1:=a_R;
-			Set_True(S2);
-		
-			for j in 1..H loop
-				a_R_ME_MO(j):= 0;	
-				for k in 1..N loop
-					a_R_ME_MO(j) := a_R_ME_MO(j) + a_R1(j)*ME_MO(k)(j);
-				end loop;
-			end loop;
-			-- max(Z+a_R_ME_MO)
 			for i in 1..H loop
-				z(i):=a_R_ME_MO(i)+Z(i);
-				-- max
-				if (max_1<Z(i)) then
-					max_1:= Z(i);
+				for j in 1..N loop
+					Z(i):= Z(i)+alpha1*R1(j)*ME_MO(j)(i);
+				end loop;	
+			end loop;
+
+			answ:= Z(1);
+			for i in 1..H loop
+				if Z(i) > answ then
+					answ:=Z(i);
 				end if;
 			end loop;
-			Suspend_Until_True(S3);
-			-- Returning result			
-			if (max_2>max_1) then
-				put("Result:");
-				put(max_2);
-				New_Line;	
-			else 
-				put("Result:");
-				put(max_1);
-				New_Line;		
+	
+			Suspend_Until_True(S_T2_max_found);
+			if answ>a then
+				a:=answ;
 			end if;
-
-			Set_True(S_end_1);
+			Put("result: ");
+						
+			Put(a);
+			New_Line;
+			
 			Put("T1 finished");
+			
+			Set_True(S_T1_finished);
+			New_Line;
 		end T1;
 
 		-- Test 2 body
 		task T2;
 			
 		task body T2 is
-		
+			answ: integer;
 		begin				
 			Put("T2 started");
 			New_Line;
 			-- Data input	
-			MO2 := GenerateMatrix;
+			MO := GenerateMatrix;
 			R  := GenerateVector;
-			
-			Set_True(S1);
-			-- alpha*Rh(MEh*MOh)
-			H:=N/2;
-			-- alpha * Rh
-			for i in H+1..N loop
-				a_R(i):=alpha*R(i);
-			end loop;
-			-- MEh*MOh
+			Set_True(S_input_finished_2);
+			Suspend_Until_True(S_input_finished_1);
+
+			Suspend_Until_True(S_copy_semaphore);
+			MO2 := MO;
+			alpha2 := alpha;
+			R2:=R;
 			for i in 1..N loop
 				for j in H+1..N loop
-					ME_MO(i)(j):= 0;
+					ME_MO(i)(j):=0;
 					for k in 1..N loop
-						ME_MO(i)(j):=ME_MO(i)(j)+ME(i)(k)*MO2(k)(j);
+						ME_MO(i)(j):=ME_MO(i)(j)+ME(k)(i)*MO2(i)(k);
 					end loop;
-				end loop;
+				end loop;	
 			end loop;
-			-- a_R*ME_MO
-			
-			Suspend_Until_True(S2);
-			a_R2:=a_R;
-
-			for j in H+1..N loop
-				a_R_ME_MO(j):= 0;	
-				for k in 1..N loop
-					a_R_ME_MO(j) := a_R_ME_MO(j) + a_R2(k)*ME_MO(j)(k);
-				end loop;
-			end loop;
-
-			-- max(Z+a_R_ME_MO)
+		
 			for i in H+1..N loop
-				z(i):=a_R_ME_MO(i)+Z(i);
-				-- max
-				if (max_2<Z(i)) then
-					max_2:= Z(i);
-				end if;
+				for j in 1..N loop
+					Z(i):= Z(i)+alpha2*R2(j)*ME_MO(j)(i);
+				end loop;	
 			end loop;
-	
-			Set_True(S3);
-			Put("T2 finished");
-			New_Line;			
-			Suspend_Until_True(S_end_1);
+			answ:= Z(H+1);
+			for i in H+1..N loop
+				if Z(i) > answ then
+					answ:=Z(i);
+				end if;
+			end loop;	
 			
+			a:= answ;			
+			Set_True(S_T2_max_found);
+			
+			Put("T2 finished");
+			Set_True(S_T2_finished);
+			New_Line;
 		end T2;
 	begin 
 		null;
@@ -172,5 +172,8 @@ procedure Lab1 is
 
 begin 
 	Start;
+	Suspend_Until_True(S_T1_finished);
+	Suspend_Until_True(S_T2_finished);
+
 end Lab1;
 		
