@@ -1,4 +1,12 @@
-﻿using System;
+/**
+ * Parallel Programming 2
+ * C#. Mutex, Semaphore, CriticalSection, Event, volatile variables
+ * A = sort(alpha*B + C*(MO * MK))
+ * 
+ * @author Oleksandr Kovalchuk
+ * @group IP-32
+ */
+using System;
 using System.Threading;
 
 namespace _03_csharp {
