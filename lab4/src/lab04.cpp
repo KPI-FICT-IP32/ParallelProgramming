@@ -122,9 +122,29 @@ int main(int argc, char* argv[]) {
                 }
             }
         }
+
+        //cleanup
+        for (int i = 0; i < N; ++i) {
+            delete[] cp_MT[i];
+        }
+        delete[] cp_MT;
+
 #pragma omp critical(io)
         std::cout << "Thread " << tid << " finished" << std::endl;
     }  // pragma omp parallel
+
+    // final cleanup;
+    for (int i = 0; i < N; ++i) {
+        delete[] MO[i];
+        delete[] MT[i];
+        delete[] MR[i];
+        delete[] MA[i];
+    }
+    delete[] Z;
+    delete[] MO;
+    delete[] MT;
+    delete[] MR;
+    delete[] MA;
 
     std::cout << "lab 04 finished" << std::endl; 
 }
