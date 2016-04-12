@@ -29,7 +29,7 @@ int main(int argc, char* argv[]) {
 
     int cp_min_z, cp_alpha;
     int **cp_MT;
-   
+
     // set MAXIMUM value of threads to 4
     omp_set_num_threads(4);
 
@@ -63,7 +63,7 @@ int main(int argc, char* argv[]) {
 // Wait for input finished
 #pragma omp barrier
 
-#pragma omp single 
+#pragma omp single
         {
             min_z = Z[0];
         }
@@ -74,6 +74,17 @@ int main(int argc, char* argv[]) {
         for (int i = 0; i < N; ++i) {
             if (Z[i] < min_z) min_z = Z[i]; 
         }
+
+// If above code not compiling assume doing that in old-fashioned way
+// #pragma omp single
+//         min_z = Z[0];
+// #pragma omp for
+//         for(int i = 0; i < N; ++i) {
+// #pragma omp critical(find_min)
+//             {
+//                 if (Z[i] < min_z) min_z = Z[i];
+//             }
+// #pragma omp barrier
 
         // copy min_z
         omp_set_lock(&lock_min_z);
@@ -98,7 +109,7 @@ int main(int argc, char* argv[]) {
             MA = new int*[N];
             for (int r = 0; r < N; ++r) MA[r] = new int[N];
         }
-       
+
         for (int i = 0; i < N; ++i) {
 
 // Let OpenMP to chose chunk size
