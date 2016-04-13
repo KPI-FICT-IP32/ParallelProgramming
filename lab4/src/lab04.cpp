@@ -100,7 +100,7 @@ int main(int argc, char* argv[]) {
 #pragma omp atomic read
         cp_alpha = alpha;
 
-#pragma omp critical(copy_MR)
+#pragma omp critical(copy_MT)
         {
             cp_MT = util::copy_matrix(MT, N, N);
         }
