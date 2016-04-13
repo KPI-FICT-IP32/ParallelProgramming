@@ -29,6 +29,9 @@ int main(int argc, char* argv[]) {
 
     int cp_min_z, cp_alpha;
     int **cp_MT;
+    
+    MA = new int*[N];
+    for (int r = 0; r < N; ++r) MA[r] = new int[N];
 
     // set MAXIMUM value of threads to 4
     omp_set_num_threads(4);
@@ -102,16 +105,7 @@ int main(int argc, char* argv[]) {
             cp_MT = util::copy_matrix(MT, N, N);
         }
 
-// Init MA result matrix
-// Using omp single to make all threads wait this to finish
-#pragma omp single
-        {
-            MA = new int*[N];
-            for (int r = 0; r < N; ++r) MA[r] = new int[N];
-        }
-
         for (int i = 0; i < N; ++i) {
-
 // Let OpenMP to chose chunk size
 #pragma omp for
             for (int j = 0; j < N; ++j) {
