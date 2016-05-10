@@ -1,20 +1,20 @@
-------------------------------------
---      Parallel programming      --
---             Lab 1              --
---         Ada. Semaphores        --
---                                --
--- Task: A = B(MO*MK) + alphaE    --
--- @author Olexandr Kovalchuk     --
--- @group IP 32                   --
---                                --
--- @date 2016-02-24               --
-------------------------------------
+------------------------------------------
+--         Parallel programming         --
+--                Lab 5                 --
+--         Ada. Protected module        --
+--                                      --
+-- Task: A = max(Z)*E + min(Z)*T(MO*MK) --
+-- @author Olexandr Kovalchuk           --
+-- @group IP 32                         --
+--                                      --
+-- @date 2016-05-11                     --
+------------------------------------------
 with Data; use Data;
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Synchronous_Task_Control; use Ada.Synchronous_Task_Control;
 
 
-procedure Lab1 is
+procedure Lab5 is
     A, B, E: Vector;
     MO, MK: Matrix;
     alpha: Integer;
@@ -124,12 +124,12 @@ procedure Lab1 is
         null;
     end RunTasks;
 begin
-    Put_Line("Lab1 started");
+    Put_Line("Lab5 started");
 
     -- Prepare semaphores:
     Set_True(S_Shared_Access);
 
     RunTasks;
-    Put_Line("Lab1 finished");
-end Lab1;
+    Put_Line("Lab5 finished");
+end Lab5;
 
