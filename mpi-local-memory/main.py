@@ -1,4 +1,4 @@
-from math import log2, floor
+from math import log2
 from mpi4py import MPI
 
 N = 4
@@ -28,7 +28,7 @@ def merge(left, right):
         else:
             result.append(right[right_idx])
             right_idx += 1
- 
+
     if left:
         result.extend(left[left_idx:])
     if right:
@@ -106,10 +106,10 @@ if __name__ == '__main__':
     Ah = [0 for _ in range(len(MUh))]
     for i in range(len(MKh)):
         for j in range(N):
-            for k in range(N): 
+            for k in range(N):
                 Ah[i] += Z[j] * MO[k][j] * MKh[i][k]
             Ah[i] += alpha * E[j] * MUh[i][j]
-    
+
     # 4 Gather result
     A = comm.gather(Ah, root=0)
     A = [a for as_ in A for a in as_] if A else None
