@@ -1,7 +1,9 @@
+#!/usr/bin/env python
+
 from math import log2
 from mpi4py import MPI
 
-N = 4
+N = 500
 
 
 def mk_scatter(comm):
@@ -115,7 +117,7 @@ if __name__ == '__main__':
     A = [a for as_ in A for a in as_] if A else None
 
     # 5 Output
-    if rank == 0:
+    if rank == 0 and N < 10:
         print(A)
 
     print("[{}] {} finished".format(rank, tuple(comm.coords)))
