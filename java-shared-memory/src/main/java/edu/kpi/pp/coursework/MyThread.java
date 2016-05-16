@@ -96,12 +96,13 @@ public class MyThread extends Thread {
 
         if (id == 0) {
             _orchestrator.waitCalc();
-            if (_size < 10);
-            StringBuilder buf = new StringBuilder();
-            for (int i = 0; i < _size; ++i) {
-                buf.append(a[i]).append(',').append(' ');
+            if (_size < 10) {
+                StringBuilder buf = new StringBuilder();
+                for (int i = 0; i < _size; ++i) {
+                    buf.append(a[i]).append(',').append(' ');
+                }
+                System.out.println(buf.toString());
             }
-            System.out.println(buf.toString());
         }
 
         System.out.printf("[%d] finished\n", id);
