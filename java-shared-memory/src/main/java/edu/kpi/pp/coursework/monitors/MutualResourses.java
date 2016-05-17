@@ -6,9 +6,6 @@ public class MutualResourses {
     private int alpha;
 
     public synchronized void setMo(int[][] mo) {this.mo = mo;}
-    public synchronized void setMk(int[][] mk) {this.mk = mk;}
-    public synchronized void setMu(int[][] mu) {this.mu = mu;}
-    public synchronized void setVa(int[] va) {this.va = va;}
     public synchronized void setVe(int[] ve) {this.ve = ve;}
     public synchronized void setVz(int[] vz) {this.vz = vz;}
     public synchronized void setAlpha(int alpha) {this.alpha = alpha;}
@@ -34,6 +31,9 @@ public class MutualResourses {
         return newE;
     }
 
+    public void setMk(int[][] mk) {this.mk = mk;}
+    public void setMu(int[][] mu) {this.mu = mu;}
+    public void setVa(int[] va) {this.va = va;}
     public int[] getZ() { return vz; }
     public int[][] getMU() {return mu;}
     public int[][] getMK() {return mk;}
