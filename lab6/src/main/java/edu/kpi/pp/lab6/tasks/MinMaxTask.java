@@ -27,9 +27,14 @@ public class MinMaxTask extends RecursiveAction{
             }
             MyThread.storage.update_a(a);
             MyThread.storage.update_b(b);
+            return;
         }
 
         int mid = _start + (_end - _start) / 2;
 
+        MinMaxTask left = new MinMaxTask(_arr, _start, mid, _threshold);
+        MinMaxTask right = new MinMaxTask(_arr, mid, _end, _threshold);
+
+        invokeAll(left, right);
     }
 }
