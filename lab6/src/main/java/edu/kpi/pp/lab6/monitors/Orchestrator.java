@@ -40,7 +40,7 @@ public class Orchestrator {
         }
     }
 
-    public synchronized void notifyInput() { input_finished++; notifyAll(); }
+    public synchronized void notifyInput() { if (++input_finished == 3) notifyAll(); }
     public synchronized void notifyMinMax() { min_max_finished = true; notifyAll();}
-    public synchronized void notifyCacl() {calc_finished++; notifyAll();}
+    public synchronized void notifyCacl() {if (++calc_finished == _p) notifyAll();}
 }
