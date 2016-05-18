@@ -1,4 +1,4 @@
-package edu.kpi.pp.lab6;
+package edu.kpi.pp.lab6.tasks;
 
 import java.util.concurrent.RecursiveAction;
 
@@ -9,7 +9,7 @@ public class MinMaxTask extends RecursiveAction{
     private final int _end;
     private final int _threshold;
 
-    public MinMaxTask(int[] arr, int start, int end, int threshold) {
+    MinMaxTask(int[] arr, int start, int end, int threshold) {
         this._arr = arr;
         this._start = start;
         this._end = end;

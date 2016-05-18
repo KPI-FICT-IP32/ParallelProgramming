@@ -1,24 +1,31 @@
-package edu.kpi.pp.lab6;
+package edu.kpi.pp.lab6.tasks;
 
+
+import edu.kpi.pp.lab6.monitors.Orchestrator;
+import edu.kpi.pp.lab6.monitors.Storage;
 
 import java.util.concurrent.ForkJoinPool;
 
 public class MyThread extends Thread {
-    private static int[] Z, E, T, A;
-    private static int[][] MO, MK;
+    private static int[] Z;
+    private static int[] E;
+    private static int[] A;
+    private static int[][] MK;
 
-    public static final Storage storage = new Storage();
-    private static final Orchestrator o = new Orchestrator();
+    static final Storage storage = new Storage();
 
     private final int _rank;
-    private final int _size = 6;
+    private final int _size;
     private final int H;
+    private final int P;
+    private final Orchestrator o;
 
-    public static final int P = 6;
-
-    public MyThread(int rank) {
+    public MyThread(int rank, int size, int p, Orchestrator o) {
         this._rank = rank;
+        this._size = size;
+        this.P = p;
         this.H = _size / P;
+        this.o = o;
     }
 
     @Override
@@ -35,8 +42,8 @@ public class MyThread extends Thread {
                 o.notifyInput();
                 break;
             case 2:
-                T = new int[_size];
-                MO = new int[_size][_size];
+                int[] T = new int[_size];
+                int[][] MO = new int[_size][_size];
                 for (int i = 0; i < _size; ++i) {
                     T[i] = 1;
                     for (int j = 0; j < _size; j++) {
@@ -61,8 +68,8 @@ public class MyThread extends Thread {
         o.waitInput();
 
         if (_rank == 0) {
-            ForkJoinPool pool = new ForkJoinPool(6);
-            pool.invoke(new MinMaxTask(Z, 0, Z.length, _size / 6));
+            ForkJoinPool pool = new ForkJoinPool(P);
+            pool.invoke(new MinMaxTask(Z, 0, Z.length, H));
             o.notifyMinMax();
         }
 

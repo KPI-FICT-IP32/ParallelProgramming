@@ -1,4 +1,4 @@
-package edu.kpi.pp.lab6;
+package edu.kpi.pp.lab6.monitors;
 
 
 public class Storage {

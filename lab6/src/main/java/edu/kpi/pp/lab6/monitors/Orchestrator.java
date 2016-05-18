@@ -1,9 +1,14 @@
-package edu.kpi.pp.lab6;
+package edu.kpi.pp.lab6.monitors;
 
 /**
  * Created by oleksandr on 5/18/16.
  */
 public class Orchestrator {
+    private final int _p;
+    public Orchestrator(int p) {
+        this._p = p;
+    }
+
     private int input_finished = 0;
     private boolean min_max_finished = false;
     private int calc_finished = 0;
@@ -28,7 +33,7 @@ public class Orchestrator {
 
     public synchronized void waitCaclFinished() {
         try {
-            while (calc_finished < MyThread.P) wait();
+            while (calc_finished < _p) wait();
         } catch (InterruptedException e) {
             e.printStackTrace();
             System.exit(1);
