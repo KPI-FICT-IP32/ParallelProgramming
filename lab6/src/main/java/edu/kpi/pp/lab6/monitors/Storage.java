@@ -34,7 +34,7 @@ public class Storage {
     }
 
     public int update_b(int new_b) {
-        if (new_b < this.b) {
+        if (new_b > this.b) {
             this.b = new_b;
         }
         return this.b;
