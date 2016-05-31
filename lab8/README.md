@@ -3,15 +3,21 @@
 ## Task def
 
 ### Formula
-TODO: add formula
+MA = (B dot C) * ME + e * MT * MK
 
 ### Topology
-TODO: add topology
+
+```
+    STAR TOPOLOGY. ALL INPUT ON MIDDLE
+
+```
 
 ## Planning
 
 ### Parallel algorithm
-TODO: Parallel algorithm
+1. p_i = sum(B_H dot C_H)
+2. p = sum(p_i)
+3. MA_H = p * ME_H + e * MT * MK_H
 
 ## Running
 
